@@ -14,9 +14,8 @@ public class CelestialBody : MonoBehaviour
     [SerializeField]
     private Vector3 initialVelocity;
     private Vector3 currentVelocity;
-    public bool isVisualizing;
     private LineRenderer lineRenderer;
-    private List<Vector3> lienPoints;
+    private List<Vector3> linePoints;
     private Vector3 ref_pos;
     private float orbitalVelocity;
     
@@ -31,7 +30,7 @@ public class CelestialBody : MonoBehaviour
         
         currentVelocity = initialVelocity;
         lineRenderer = GetComponent<LineRenderer>();
-        lienPoints = new List<Vector3>();
+        linePoints = new List<Vector3>();
         ref_pos = rb.position;
 
     }
@@ -40,9 +39,8 @@ public class CelestialBody : MonoBehaviour
         foreach (var body in allBodies){
             if (body != this){
                 var distance = Vector3.Distance(transform.position, body.transform.position);
-                
-                var direction = (-this.transform.position + body.transform.position).normalized;
-                var gravityForce = direction * universe.gravitationalConstant *( (mass * body.GetComponent<Rigidbody>().mass))/ distance* distance;
+                var direction = (body.transform.position - this.transform.position).normalized;
+                var gravityForce = direction * universe.gravitationalConstant * (mass * body.GetComponent<Rigidbody>().mass)/ distance* distance;
                 var acceleration = gravityForce/mass;
                 currentVelocity += acceleration;
             }
@@ -52,11 +50,13 @@ public class CelestialBody : MonoBehaviour
     public void UpdatePosition(){
         rb.position += currentVelocity;
     }
-    
+
     public void UpdateLine(){
         ref_pos += currentVelocity;
-        lienPoints.Add(ref_pos);
-        lineRenderer.positionCount = lienPoints.Count;
-        lineRenderer.SetPosition(lienPoints.Count -1, ref_pos);
+        linePoints.Add(ref_pos);
+        lineRenderer.positionCount = linePoints.Count;
+        lineRenderer.SetPosition(linePoints.Count - 1, ref_pos);
     }
+
+    
 }

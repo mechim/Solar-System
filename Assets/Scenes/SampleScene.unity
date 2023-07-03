@@ -252,8 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  initialVelocity: {x: 0, y: 1.5, z: 0}
-  isVisualizing: 0
+  initialVelocity: {x: 0, y: 3.5, z: 0}
 --- !u!120 &128873403
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -392,7 +391,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434109334}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc068d95c41b539439abe0c3f45f471a, type: 3}
   m_Name: 
@@ -435,7 +434,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   initialVelocity: {x: 0, y: 0, z: 0}
-  isVisualizing: 0
 --- !u!136 &612743831
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -994,6 +992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1672970946}
   - component: {fileID: 1672970947}
+  - component: {fileID: 1672970948}
   m_Layer: 0
   m_Name: GravitySimulation
   m_TagString: Untagged
@@ -1023,11 +1022,35 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672970944}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26366db6af1b6ba4c9fde0c711dd92da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iterations: 1000
+  allBodies:
+  - {fileID: 128873402}
+  - {fileID: 612743830}
+  - {fileID: 2092380256}
+  ref_positions:
+  - {x: -175.5, y: 0, z: 461.8}
+  ref_masses: []
+  lineRenderers: []
+  ref_velocities: []
+  universe: {fileID: 1098534827}
+--- !u!114 &1672970948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672970944}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3411d479af853e43962729442419e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isVisualizing: 0
 --- !u!1 &2092380249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,7 +1194,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   initialVelocity: {x: 0, y: 0, z: 0}
-  isVisualizing: 0
 --- !u!120 &2092380257
 LineRenderer:
   m_ObjectHideFlags: 0

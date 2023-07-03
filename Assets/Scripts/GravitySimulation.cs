@@ -5,6 +5,7 @@ using UnityEngine;
 public class GravitySimulation : MonoBehaviour
 {
    CelestialBody[] bodies;
+   public bool isVisualizing;
 
    private void Awake() {
         bodies = FindObjectsOfType<CelestialBody>();
@@ -16,7 +17,7 @@ public class GravitySimulation : MonoBehaviour
         }
        
         for (int i = 0; i < bodies.Length; i++){
-            if (bodies[i].isVisualizing == false)
+            if (isVisualizing == false)
                 bodies[i].UpdatePosition();
             else bodies[i].UpdateLine();
         }
