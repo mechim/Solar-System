@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Universe : MonoBehaviour
+public static class Universe 
 {
-    public float gravitationalConstant;
+    public const float gravitationalConstant = 0.0001f;
+    public const float timeStep = 1;
 }

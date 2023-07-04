@@ -8,9 +8,7 @@ public class Visualization : MonoBehaviour
     public int iterations;
     // public bool relativeToBody;
     // public CelestialBody centralBody;
-    public Universe universe;
     private void Start() {
-        universe = FindObjectOfType<Universe>();
         if (Application.isPlaying){
             HideOrbits();
         }
@@ -31,8 +29,7 @@ public class Visualization : MonoBehaviour
             virtualBodies[bodyIndex] = new VirtualBody();
             virtualBodies[bodyIndex].position = bodies[bodyIndex].transform.position;
             virtualBodies[bodyIndex].velocity = bodies[bodyIndex].initialVelocity;
-            // virtualBodies[bodyIndex].mass = bodies[bodyIndex].surfaceGravity * bodies[bodyIndex].radius * bodies[bodyIndex].radius * universe.gravitationalConstant;
-            virtualBodies[bodyIndex].mass = bodies[bodyIndex].GetComponent<Rigidbody>().mass;
+            virtualBodies[bodyIndex].mass = bodies[bodyIndex].surfaceGravity * bodies[bodyIndex].radius * bodies[bodyIndex].radius * Universe.gravitationalConstant;
         }
 
         for (int i = 0; i < iterations; i ++){
@@ -40,18 +37,23 @@ public class Visualization : MonoBehaviour
             for (int bodyIndex = 0; bodyIndex < virtualBodies.Length; bodyIndex++){
                 for (int otherBodyIndex = 0; otherBodyIndex < virtualBodies.Length; otherBodyIndex++){
                     if (bodyIndex != otherBodyIndex){
-                        var distance = Vector3.Distance(virtualBodies[bodyIndex].position, virtualBodies[otherBodyIndex].position);
+                        var sqrDistance = (virtualBodies[otherBodyIndex].position - virtualBodies[bodyIndex].position).sqrMagnitude ;
+                        var distance = Vector3.Distance(virtualBodies[bodyIndex].position, virtualBodies[otherBodyIndex].position) * Vector3.Distance(virtualBodies[bodyIndex].position, virtualBodies[otherBodyIndex].position);
                         var direction = (virtualBodies[otherBodyIndex].position - virtualBodies[bodyIndex].position).normalized;
-                        var gravityForce = direction * universe.gravitationalConstant * (virtualBodies[bodyIndex].mass * virtualBodies[otherBodyIndex].mass)/ distance* distance;
+                        var gravityForce = direction * Universe.gravitationalConstant * (virtualBodies[bodyIndex].mass * virtualBodies[otherBodyIndex].mass)/distance;
                         var acceleration = gravityForce/virtualBodies[bodyIndex].mass;
+                        // virtualBodies[bodyIndex].velocity += acceleration * Universe.timeStep;
                         virtualBodies[bodyIndex].velocity += acceleration;
                     }
                 }
             }
             //Update the line
             for (int bodyIndex = 0; bodyIndex < bodies.Length; bodyIndex++){
+                // virtualBodies[bodyIndex].position += virtualBodies[bodyIndex].velocity * Universe.timeStep;
                 virtualBodies[bodyIndex].position += virtualBodies[bodyIndex].velocity;
                 var lineRenderer = bodies[bodyIndex].gameObject.GetComponent<LineRenderer>();
+                lineRenderer.startWidth = 10;
+                lineRenderer.startColor = Color.white;
                 lineRenderer.positionCount = i+1;
                 lineRenderer.SetPosition(i, virtualBodies[bodyIndex].position);
             }
@@ -68,15 +70,6 @@ public class Visualization : MonoBehaviour
             lineRenderer.positionCount = 0;
         }
     }
-
-    private void UpdateRefVelocity(){
-        
-    }
-
-    public void UpdateLine(){
-        
-    }
-
     class VirtualBody{
         public Vector3 position;
         public Vector3 velocity;
