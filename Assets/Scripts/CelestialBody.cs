@@ -22,9 +22,8 @@ public class CelestialBody : MonoBehaviour
         allBodies = FindObjectsOfType<CelestialBody>();
         rb = GetComponent<Rigidbody>();
         
-        mass = surfaceGravity * radius * radius / Universe.gravitationalConstant * 10000;
         Debug.Log(name + radius);
-        
+        mass = CalculateMass();
         ref_velocity = currentVelocity = initialVelocity;
         lineRenderer = GetComponent<LineRenderer>();
         linePoints = new List<Vector3>();
@@ -32,22 +31,26 @@ public class CelestialBody : MonoBehaviour
         transform.localScale = Vector3.one * radius;
     }
 
+    public float CalculateMass(){
+        return surfaceGravity * radius * radius / Universe.gravitationalConstant;
+    }
+
     public void UpdateVelocity(){   
         foreach (var body in allBodies){
             if (body != this){
                 var sqrDistance = (body.transform.position -transform.position).sqrMagnitude ;
                 var direction = (body.transform.position - this.transform.position).normalized;
-                var gravityForce = direction * Universe.gravitationalConstant * (mass * body.mass)/ sqrDistance;
+                var gravityForce = direction * Universe.gravitationalConstant * (mass * body.mass)/sqrDistance;
                 var acceleration = gravityForce/mass;
-                // currentVelocity += acceleration * Universe.timeStep;
-                currentVelocity += acceleration;
+                currentVelocity += acceleration * Universe.timeStep;
+                // currentVelocity += acceleration;
             }
         }
     }
 
     public void UpdatePosition(){
-        // rb.position += currentVelocity * Universe.timeStep;
-        rb.position += currentVelocity;
+        rb.position += currentVelocity * Universe.timeStep;
+        // rb.position += currentVelocity;
     }
 
 

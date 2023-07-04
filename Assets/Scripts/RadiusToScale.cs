@@ -14,7 +14,6 @@ public class RadiusToScale : MonoBehaviour
     }
     private void Update() {
         transform.localScale = Vector3.one * celestialBody.radius;
-        celestialBody.mass = celestialBody.surfaceGravity * celestialBody.radius * celestialBody.radius /( Universe.gravitationalConstant * 10000);
-            // GetComponent<Rigidbody>().mass = celestialBody.mass;
+        celestialBody.mass = celestialBody.CalculateMass();
     }
 }
