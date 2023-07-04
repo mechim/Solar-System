@@ -12,15 +12,24 @@ public class GravitySimulation : MonoBehaviour
    }
 
     private void FixedUpdate() {
-        for (int i = 0; i < bodies.Length; i++ ){
-            bodies[i].UpdateVelocity();
+        if (isVisualizing){
+            for (int i = 0; i < bodies.Length; i++ ){
+                bodies[i].UpdateRefVelocity();
+            }
+       
+            for (int i = 0; i < bodies.Length; i++){
+                bodies[i].UpdateLine();
+            }
+        } else{
+            for (int i = 0; i < bodies.Length; i++ ){
+                bodies[i].UpdateVelocity();
+            }
+        
+            for (int i = 0; i < bodies.Length; i++){
+                bodies[i].UpdatePosition();
+            }
         }
        
-        for (int i = 0; i < bodies.Length; i++){
-            if (isVisualizing == false)
-                bodies[i].UpdatePosition();
-            else bodies[i].UpdateLine();
-        }
     
    }
 }
