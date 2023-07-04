@@ -14,9 +14,9 @@ public class OrbitalVelocityCalc : MonoBehaviour
         universe = FindObjectOfType<Universe>();
         CalculateOrbitalVeloctiy();
     }
-    private void CalculateOrbitalVeloctiy(){
-        var distance = Vector3.Distance(body1.transform.position, body2.transform.position);
-        var grav = universe.gravitationalConstant;
+      private void CalculateOrbitalVeloctiy(){
+       var distance = Vector3.Distance(body1.transform.position, body2.transform.position);
+       var grav = universe.gravitationalConstant;
         var velocity = Mathf.Sqrt((grav*mass)/distance);
         Debug.Log(velocity);
     }
