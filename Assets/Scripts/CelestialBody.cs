@@ -18,16 +18,20 @@ public class CelestialBody : MonoBehaviour
     private List<Vector3> linePoints;
     private Vector3 ref_pos;
     private Vector3 ref_velocity;
+    public float radius;
     private float orbitalVelocity;
-    
-
+    public float surfaceGravity;
   
     private void Awake() {
         universe = FindObjectOfType<Universe>();
         allBodies = FindObjectsOfType<CelestialBody>();
         rb = GetComponent<Rigidbody>();
+        
+        // radius = GetComponent<SphereCollider>().radius*Mathf.Max(transform.lossyScale.x,transform.lossyScale.y,transform.lossyScale.z);
+        // mass = surfaceGravity * radius * radius / universe.gravitationalConstant;
+        // rb.mass = mass;
         mass = rb.mass;
-
+        Debug.Log(name + radius);
         
         ref_velocity = currentVelocity = initialVelocity;
         lineRenderer = GetComponent<LineRenderer>();
@@ -36,6 +40,9 @@ public class CelestialBody : MonoBehaviour
 
     }
 
+    public float CalculateMass(){
+        return surfaceGravity * radius * radius / universe.gravitationalConstant;
+    }
     public void UpdateVelocity(){   
         foreach (var body in allBodies){
             if (body != this){

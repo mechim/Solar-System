@@ -253,6 +253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   initialVelocity: {x: 0, y: 3.7, z: 0}
+  radius: 0
+  surfaceGravity: 10
 --- !u!120 &128873403
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -811,7 +813,6 @@ GameObject:
   - component: {fileID: 2092380252}
   - component: {fileID: 2092380251}
   - component: {fileID: 2092380250}
-  - component: {fileID: 2092380255}
   - component: {fileID: 2092380256}
   - component: {fileID: 2092380257}
   m_Layer: 0
@@ -915,18 +916,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2092380255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092380249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6c313c06b16440469a496dd13349862, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2092380256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -941,6 +930,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   initialVelocity: {x: 0, y: 0, z: 0}
+  radius: 0
+  surfaceGravity: 10
 --- !u!120 &2092380257
 LineRenderer:
   m_ObjectHideFlags: 0
