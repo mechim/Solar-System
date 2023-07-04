@@ -11,8 +11,7 @@ public class CelestialBody : MonoBehaviour
     private float mass;
     private Vector3 distance;
     private Vector3 acceleration;
-    [SerializeField]
-    private Vector3 initialVelocity;
+    public Vector3 initialVelocity;
     private Vector3 currentVelocity;
     private LineRenderer lineRenderer;
     private List<Vector3> linePoints;
@@ -37,12 +36,12 @@ public class CelestialBody : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         linePoints = new List<Vector3>();
         ref_pos = rb.position;
-
+        // transform.localScale = Vector3.one * radius;
     }
 
-    public float CalculateMass(){
-        return surfaceGravity * radius * radius / universe.gravitationalConstant;
-    }
+    // public float CalculateMass(){
+    //     return surfaceGravity * radius * radius / universe.gravitationalConstant;
+    // }
     public void UpdateVelocity(){   
         foreach (var body in allBodies){
             if (body != this){

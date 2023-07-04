@@ -6,63 +6,81 @@ using UnityEngine;
 public class Visualization : MonoBehaviour
 {
     public int iterations;
-    public CelestialBody[] allBodies;
-    public List<Vector3> ref_positions;
-    public List<float> ref_masses;
-    public List<LineRenderer> lineRenderers;
-    public List<Vector3> ref_velocities;
+    // public bool relativeToBody;
+    // public CelestialBody centralBody;
     public Universe universe;
-    private List<Vector3> linePoints;
-    private int lineCount;
-
     private void Start() {
-        allBodies = FindObjectsOfType<CelestialBody>();
         universe = FindObjectOfType<Universe>();
-        linePoints = new List<Vector3>();
-        ref_positions = new List<Vector3>();
-        ref_masses = new List<float>();
-        ref_velocities = new List<Vector3>();   
-        lineRenderers = new List<LineRenderer>();
-
-        foreach (var body in allBodies){
-            ref_positions.Add(body.transform.position);
-            ref_masses.Add(body.rb.mass);
-            lineRenderers.Add(body.transform.GetComponent<LineRenderer>());
+        if (Application.isPlaying){
+            HideOrbits();
         }
     }
 
     private void Update(){
-        for (int i = 0; i < iterations; i++){
-            UpdateRefVelocity();
-        }
-        for (int i = 0; i < iterations; i++){
-            UpdateLine();
+        if (!Application.isPlaying) {
+            DrawOrbits();
         }
     }
 
-    private void UpdateRefVelocity(){
-        for (int i = 0; i < ref_positions.Count; i ++){
-            for (int j = 0; j < ref_positions.Count; j ++){
-                if (i != j){
-                    // this - i ; other - j
-                    var temp_distance = Vector3.Distance(ref_positions[i], ref_positions[j]);
-                    var temp_direction = (ref_positions[j] - ref_positions[i]).normalized;
-                    var temp_force = temp_direction * universe.gravitationalConstant*(ref_masses[i] * ref_masses[j])/temp_distance*temp_distance; 
-                    var temp_acc = temp_force/ref_masses[i];
-                    ref_velocities[i] += temp_acc;
+    private void DrawOrbits(){
+        //Populate virtual bodies
+        CelestialBody[] bodies = FindObjectsOfType<CelestialBody> ();
+        VirtualBody[] virtualBodies = new VirtualBody[bodies.Length];
+
+        for (int bodyIndex = 0; bodyIndex < bodies.Length; bodyIndex++){
+            virtualBodies[bodyIndex] = new VirtualBody();
+            virtualBodies[bodyIndex].position = bodies[bodyIndex].transform.position;
+            virtualBodies[bodyIndex].velocity = bodies[bodyIndex].initialVelocity;
+            // virtualBodies[bodyIndex].mass = bodies[bodyIndex].surfaceGravity * bodies[bodyIndex].radius * bodies[bodyIndex].radius * universe.gravitationalConstant;
+            virtualBodies[bodyIndex].mass = bodies[bodyIndex].GetComponent<Rigidbody>().mass;
+        }
+
+        for (int i = 0; i < iterations; i ++){
+             //Calculate virtual velocities
+            for (int bodyIndex = 0; bodyIndex < virtualBodies.Length; bodyIndex++){
+                for (int otherBodyIndex = 0; otherBodyIndex < virtualBodies.Length; otherBodyIndex++){
+                    if (bodyIndex != otherBodyIndex){
+                        var distance = Vector3.Distance(virtualBodies[bodyIndex].position, virtualBodies[otherBodyIndex].position);
+                        var direction = (virtualBodies[otherBodyIndex].position - virtualBodies[bodyIndex].position).normalized;
+                        var gravityForce = direction * universe.gravitationalConstant * (virtualBodies[bodyIndex].mass * virtualBodies[otherBodyIndex].mass)/ distance* distance;
+                        var acceleration = gravityForce/virtualBodies[bodyIndex].mass;
+                        virtualBodies[bodyIndex].velocity += acceleration;
+                    }
                 }
+            }
+            //Update the line
+            for (int bodyIndex = 0; bodyIndex < bodies.Length; bodyIndex++){
+                virtualBodies[bodyIndex].position += virtualBodies[bodyIndex].velocity;
+                var lineRenderer = bodies[bodyIndex].gameObject.GetComponent<LineRenderer>();
+                lineRenderer.positionCount = i+1;
+                lineRenderer.SetPosition(i, virtualBodies[bodyIndex].position);
             }
         }
     }
 
-    public void UpdateLine(){
-        lineCount++;
-        for ( int i = 0; i < ref_positions.Count-1; i ++){
-            ref_positions[i] += ref_velocities[i];
-            // linePoints.Add(ref_positions[i]);
-            lineRenderers[i].positionCount = lineCount;
-            lineRenderers[i].SetPosition(lineCount -1, ref_positions[i]);
+
+    private void HideOrbits(){
+        CelestialBody[] bodies = FindObjectsOfType<CelestialBody> ();
+
+        // Draw paths
+        for (int bodyIndex = 0; bodyIndex < bodies.Length; bodyIndex++) {
+            var lineRenderer = bodies[bodyIndex].gameObject.GetComponentInChildren<LineRenderer> ();
+            lineRenderer.positionCount = 0;
         }
+    }
+
+    private void UpdateRefVelocity(){
+        
+    }
+
+    public void UpdateLine(){
+        
+    }
+
+    class VirtualBody{
+        public Vector3 position;
+        public Vector3 velocity;
+        public float mass;
     }
 
 
