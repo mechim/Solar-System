@@ -22,7 +22,6 @@ public class CelestialBody : MonoBehaviour
         allBodies = FindObjectsOfType<CelestialBody>();
         rb = GetComponent<Rigidbody>();
         
-        Debug.Log(name + radius);
         mass = CalculateMass();
         ref_velocity = currentVelocity = initialVelocity;
         lineRenderer = GetComponent<LineRenderer>();
@@ -43,14 +42,12 @@ public class CelestialBody : MonoBehaviour
                 var gravityForce = direction * Universe.gravitationalConstant * (mass * body.mass)/sqrDistance;
                 var acceleration = gravityForce/mass;
                 currentVelocity += acceleration * Universe.timeStep;
-                // currentVelocity += acceleration;
             }
         }
     }
 
     public void UpdatePosition(){
         rb.position += currentVelocity * Universe.timeStep;
-        // rb.position += currentVelocity;
     }
 
 
